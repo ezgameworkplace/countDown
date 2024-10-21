@@ -5,8 +5,17 @@ import json
 import os
 from datetime import datetime, timedelta
 
-# 获取脚本所在目录
-base_path = os.path.dirname(os.path.abspath(__file__))
+# 获取 exe 文件所在目录
+if hasattr(sys, '_MEIPASS'):
+    # 如果在打包环境中运行，获取 exe 文件所在目录
+    base_path = os.path.dirname(os.path.abspath(sys.executable))
+else:
+    base_path = os.path.dirname(os.path.abspath(__file__))
+
+# 切换工作目录到 exe 所在的目录
+os.chdir(base_path)
+
+# 定义 JSON 文件的路径
 json_path = os.path.join(base_path, 'config.json')
 
 class FloatingWindow(QtWidgets.QWidget):

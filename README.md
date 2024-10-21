@@ -1,5 +1,5 @@
 # countDown
 
-pyinstaller -F -w "D:\\2023\\countdown\\countdown.py" --add-data "D:\\2023\\countdown\\config.json;."
+pyinstaller -F -w "D:\\2023\\countdown\\countdown.py"
 
 config.json has end time
