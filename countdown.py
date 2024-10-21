@@ -1,6 +1,7 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 import sys
 import time
+import json
 from datetime import datetime, timedelta
 
 class FloatingWindow(QtWidgets.QWidget):
@@ -26,19 +27,33 @@ class FloatingWindow(QtWidgets.QWidget):
         self.count_down.setAlignment(QtCore.Qt.AlignHCenter)
         # self.count_down.setAlignment(QtCore.Qt.AlignCenter)
 
+        # 读取 config.json 中的结束时间
+        self.end_time = self.load_end_time_from_config()
+
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
 
+    def load_end_time_from_config(self):
+        # 读取同级目录下的 config.json 文件
+        try:
+            with open("config.json", "r") as f:
+                config = json.load(f)
+                # 解析 JSON 中的 end_time
+                end_time_str = config.get("end_time")
+                return datetime.fromisoformat(end_time_str)
+        except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
+            print(f"Error loading config: {e}")
+            # 如果读取失败，默认设置一个结束日期
+            return datetime(2024, 10, 1)
+
     def update_time(self):
         self.now = datetime.now()
-        self.end_time = datetime(2023, 5, 14) # 设置结束日期
-        self.rest = self.end_time-self.now
+        self.rest = self.end_time - self.now
         days, hour_remainder = divmod(int(self.rest.total_seconds()), 86400)
         hours, remainder = divmod(hour_remainder, 3600)
         minutes, seconds = divmod(remainder, 60)
         self.count_down.setText("{}days,{}:{}:{}".format(days, hours, minutes, seconds))
-
 
 
     def mousePressEvent(self, event):
