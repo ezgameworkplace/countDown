@@ -2,7 +2,12 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 import sys
 import time
 import json
+import os
 from datetime import datetime, timedelta
+
+# 获取脚本所在目录
+base_path = os.path.dirname(os.path.abspath(__file__))
+json_path = os.path.join(base_path, 'config.json')
 
 class FloatingWindow(QtWidgets.QWidget):
 
@@ -37,7 +42,7 @@ class FloatingWindow(QtWidgets.QWidget):
     def load_end_time_from_config(self):
         # 读取同级目录下的 config.json 文件
         try:
-            with open("config.json", "r") as f:
+            with open(json_path, "r") as f:
                 config = json.load(f)
                 # 解析 JSON 中的 end_time
                 end_time_str = config.get("end_time")
